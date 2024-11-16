@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐸 Mint Your Frogs 🐸</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #a8d08d;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #4b7c44;
+        }
+        .upload-form {
+            background: #e0f7df;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .upload-form input[type="text"],
+        .upload-form input[type="file"] {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .upload-form button {
+            background-color: #4b7c44;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .upload-form button:hover {
+            background-color: #3a5f34;
+        }
+        .video-list {
+            width: 80%;
+            max-width: 600px;
+        }
+        .video-item {
+            background: #f0f9f0;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .video-item h2 {
+            color: #4b7c44;
+            font-size: 1.2em;
+        }
+        video {
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🐸 Mint Your Frogs 🐸</h1>
+    
+    <div class="upload-form">
+        <h2>Upload a New Video</h2>
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+            <input type="text" name="title" placeholder="Enter video title" required><br>
+            <input type="file" name="video" accept="video/*" required><br>
+            <button type="submit">Mint Video</button>
+        </form>
+    </div>
+
+    <div id="videoList" class="video-list"></div>
+
+    <script>
+        async function fetchVideos() {
+            const response = await fetch('/videos');
+            const videos = await response.json();
+            const videoList = document.getElementById('videoList');
+
+            for (const [hash, video] of Object.entries(videos)) {
+                const videoItem = document.createElement('div');
+                videoItem.className = 'video-item';
+                videoItem.innerHTML = `
+                    <h2>${video.title}</h2>
+                    <p><strong>Hash:</strong> ${hash}</p>
+                    <p><strong>Minted:</strong> ${video.minted ? 'Yes' : 'No'}</p>
+                    <p><strong>Timestamp:</strong> ${new Date(video.timestamp).toLocaleString()}</p>
+                    <video controls>
+                        <source src="/${video.filename}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                `;
+                videoList.appendChild(videoItem);
+            }
+        }
+
+        fetchVideos();
+    </script>
+</body>
+</html>
