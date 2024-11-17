@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.28;
 
 contract VideoMinting {
     // This event is emitted when a video is minted, recording the user and the video hash.
